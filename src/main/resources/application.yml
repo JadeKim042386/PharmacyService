@@ -14,6 +14,11 @@ spring:
     activate:
       on-profile: common
 
+kakao:
+  rest:
+    api:
+      key: ${KAKAO_REST_API_KEY}
+
 ---
 
 spring:
@@ -32,7 +37,7 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
-
+  f6471c68d86af19898ca85c35ece3614
 ---
 
 spring:
