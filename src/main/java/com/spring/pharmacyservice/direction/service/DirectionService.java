@@ -2,11 +2,13 @@ package com.spring.pharmacyservice.direction.service;
 
 import com.spring.pharmacyservice.api.dto.DocumentDto;
 import com.spring.pharmacyservice.direction.entity.Direction;
-import com.spring.pharmacyservice.pharmacy.dto.PharmacyDto;
+import com.spring.pharmacyservice.direction.repository.DirectionRepository;
 import com.spring.pharmacyservice.pharmacy.service.PharmacySearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +19,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DirectionService {
     private final PharmacySearchService pharmacySearchService;
+    private final DirectionRepository directionRepository;
+
+    @Transactional
+    public List<Direction> saveALl(List<Direction> directionList) {
+        if (CollectionUtils.isEmpty(directionList)) return List.of();
+        return directionRepository.saveAll(directionList);
+    }
 
     private static final int MAX_SEARCH_COUNT = 3;
     private static final double RADIUS_KM = 10.0;
