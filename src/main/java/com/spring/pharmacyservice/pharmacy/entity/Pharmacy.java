@@ -1,9 +1,7 @@
 package com.spring.pharmacyservice.pharmacy.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.spring.pharmacyservice.AuditingFields;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,10 +10,11 @@ import javax.persistence.Id;
 
 @Builder
 @Getter
+@ToString(callSuper = true)
 @Entity(name = "pharmacy")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pharmacy {
+public class Pharmacy extends AuditingFields {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
