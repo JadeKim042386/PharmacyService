@@ -9,9 +9,10 @@ class DirectionServiceTest extends Specification {
     private PharmacySearchService pharmacySearchService = Mock()
     private DirectionService directionService = new DirectionService(pharmacySearchService)
 
-    private List<PharmacyDto> pharmacyList = new ArrayList<>()
+    private List<PharmacyDto> pharmacyList
 
     def setup() {
+        pharmacyList = new ArrayList<>()
         pharmacyList.addAll(
                 PharmacyDto.builder()
                         .id(1L)
