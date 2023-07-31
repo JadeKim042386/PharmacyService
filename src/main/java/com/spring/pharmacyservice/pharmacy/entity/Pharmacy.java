@@ -24,4 +24,8 @@ public class Pharmacy {
     private String pharmacyAddress;
     private double latitude;
     private double longitude;
+
+    public void chnagePharmacyAddress(String address) {
+        this.pharmacyAddress = address;
+    }
 }
