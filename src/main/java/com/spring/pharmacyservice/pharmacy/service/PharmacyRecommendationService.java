@@ -3,6 +3,7 @@ package com.spring.pharmacyservice.pharmacy.service;
 import com.spring.pharmacyservice.api.dto.DocumentDto;
 import com.spring.pharmacyservice.api.dto.KakaoApiResponseDto;
 import com.spring.pharmacyservice.api.service.KakaoAddressSearchService;
+import com.spring.pharmacyservice.direction.dto.OutputDto;
 import com.spring.pharmacyservice.direction.entity.Direction;
 import com.spring.pharmacyservice.direction.service.DirectionService;
 import com.spring.pharmacyservice.pharmacy.repository.PharmacyRepository;
@@ -21,16 +22,19 @@ public class PharmacyRecommendationService {
     private final KakaoAddressSearchService kakaoAddressSearchService;
     private final DirectionService directionService;
 
-    public void recommendPharmacyList(String address) {
+    public List<OutputDto> recommendPharmacyList(String address) {
         KakaoApiResponseDto kakaoApiResponseDto = kakaoAddressSearchService.requestAddressSearch(address);
         if (Objects.isNull(kakaoApiResponseDto) || CollectionUtils.isEmpty(kakaoApiResponseDto.getDocumentList())) {
             log.error("[PharmacyRecommendationService recommendPharmacyList fail] Input address: {}", address);
-            return;
+            return List.of();
         }
 
         DocumentDto documentDto = kakaoApiResponseDto.getDocumentList().get(0);
 
         List<Direction> directions = directionService.buildDirectionListByCategoryApi(documentDto);
-        directionService.saveALl(directions);
+        return directionService.saveALl(directions)
+                .stream()
+                .map(OutputDto::fromDirection)
+                .toList();
     }
 }
