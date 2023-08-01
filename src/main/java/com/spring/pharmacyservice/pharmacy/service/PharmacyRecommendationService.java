@@ -5,10 +5,11 @@ import com.spring.pharmacyservice.api.dto.KakaoApiResponseDto;
 import com.spring.pharmacyservice.api.service.KakaoAddressSearchService;
 import com.spring.pharmacyservice.direction.dto.OutputDto;
 import com.spring.pharmacyservice.direction.entity.Direction;
+import com.spring.pharmacyservice.direction.service.Base62Service;
 import com.spring.pharmacyservice.direction.service.DirectionService;
-import com.spring.pharmacyservice.pharmacy.repository.PharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +22,10 @@ import java.util.Objects;
 public class PharmacyRecommendationService {
     private final KakaoAddressSearchService kakaoAddressSearchService;
     private final DirectionService directionService;
+    private final Base62Service base62Service;
+
+    @Value("${pharmacy.recommendation.base.url}")
+    private String baseUrl;
 
     public List<OutputDto> recommendPharmacyList(String address) {
         KakaoApiResponseDto kakaoApiResponseDto = kakaoAddressSearchService.requestAddressSearch(address);
@@ -34,7 +39,7 @@ public class PharmacyRecommendationService {
         List<Direction> directions = directionService.buildDirectionListByCategoryApi(documentDto);
         return directionService.saveALl(directions)
                 .stream()
-                .map(OutputDto::fromDirection)
+                .map(direction -> OutputDto.fromDirection(direction, baseUrl + base62Service.encodeDirectionId(direction.getId())))
                 .toList();
     }
 }
