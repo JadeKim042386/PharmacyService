@@ -27,4 +27,20 @@ class KakaoUriBuilderServiceTest extends Specification {
         then:
         decodedResult == "https://dapi.kakao.com/v2/local/search/address.json?query=서울 성북구"
     }
+
+    def "buildUriByCategorySearch - 정상 인코딩"() {
+        given:
+        def latitude = 37.61040424
+        def longitude = 127.0569046
+        def radius = 10 //km
+        def category = "PM9"
+        def charset = StandardCharsets.UTF_8
+
+        when:
+        def uri = kakaoUriBuilderService.buildUriByCategorySearch(latitude, longitude, radius, category)
+        def decodedResult = URLDecoder.decode(uri.toString(), charset)
+
+        then:
+        decodedResult == "https://dapi.kakao.com/v2/local/search/category.json?category_group_code=PM9&x=127.0569046&y=37.61040424&radius=10000.0&sort=distance"
+    }
 }

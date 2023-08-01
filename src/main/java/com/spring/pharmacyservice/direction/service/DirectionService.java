@@ -1,6 +1,7 @@
 package com.spring.pharmacyservice.direction.service;
 
 import com.spring.pharmacyservice.api.dto.DocumentDto;
+import com.spring.pharmacyservice.api.service.KakaoCategorySearchService;
 import com.spring.pharmacyservice.direction.entity.Direction;
 import com.spring.pharmacyservice.direction.repository.DirectionRepository;
 import com.spring.pharmacyservice.pharmacy.service.PharmacySearchService;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class DirectionService {
     private final PharmacySearchService pharmacySearchService;
     private final DirectionRepository directionRepository;
+    private final KakaoCategorySearchService kakaoCategorySearchService;
 
     @Transactional
     public List<Direction> saveALl(List<Direction> directionList) {
@@ -29,6 +31,29 @@ public class DirectionService {
 
     private static final int MAX_SEARCH_COUNT = 3;
     private static final double RADIUS_KM = 10.0;
+
+    public List<Direction> buildDirectionListByCategoryApi(DocumentDto inputDocumentDto) {
+        if (Objects.isNull(inputDocumentDto)) return List.of();
+
+        return kakaoCategorySearchService
+                .requestPharmacyCategorySearch(inputDocumentDto.getLatitude(), inputDocumentDto.getLongitude(), RADIUS_KM)
+                .getDocumentList()
+                .stream()
+                .map(resultDocumentDto ->
+                        Direction.builder()
+                                .inputAddress(inputDocumentDto.getAddressName())
+                                .inputLatitude(inputDocumentDto.getLatitude())
+                                .inputLongitude(inputDocumentDto.getLongitude())
+                                .targetPharmacyName(resultDocumentDto.getPlaceName())
+                                .targetAddress(resultDocumentDto.getAddressName())
+                                .targetLatitude(resultDocumentDto.getLatitude())
+                                .targetLongitude(resultDocumentDto.getLongitude())
+                                .distance(resultDocumentDto.getDistance() * 0.001) //km
+                                .build()
+                )
+                .limit(MAX_SEARCH_COUNT)
+                .toList();
+    }
 
     public List<Direction> buildDirectionList(DocumentDto documentDto) {
         if (Objects.isNull(documentDto)) return List.of();
