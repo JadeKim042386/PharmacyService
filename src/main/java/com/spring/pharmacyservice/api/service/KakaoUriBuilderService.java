@@ -6,6 +6,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+/**
+ * String으로 반환하면 RestTemplate 내에서 한 번더 encoding 되기 때문에 URI로 반환
+ */
 @Slf4j
 @Service
 public class KakaoUriBuilderService {

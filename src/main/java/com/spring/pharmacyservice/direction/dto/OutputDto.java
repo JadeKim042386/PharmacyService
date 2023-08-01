@@ -13,12 +13,15 @@ public class OutputDto {
     private String roadViewUrl;
     private String distance;
 
-    public static OutputDto fromDirection(Direction direction) {
+    private static final String ROAD_VIEW_BASE_URL = "https://map.kakao.com/link/roadview/";
+
+    public static OutputDto fromDirection(Direction direction, String directionUrl) {
+
         return OutputDto.builder()
                 .pharmacyName(direction.getTargetPharmacyName())
                 .pharmacyAddress(direction.getTargetAddress())
-                .directionUrl("todo")
-                .roadViewUrl("todo")
+                .directionUrl(directionUrl)
+                .roadViewUrl(ROAD_VIEW_BASE_URL + direction.getTargetLatitude() + "," + direction.getTargetLongitude())
                 .distance(String.format("%.2f km", direction.getDistance()))
                 .build();
     }
