@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `direction`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `direction` (
                              `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                             `created_date` datetime(6) DEFAULT NULL,
-                             `modified_date` datetime(6) DEFAULT NULL,
+                             `created_at` datetime(6) DEFAULT NULL,
+                             `modified_at` datetime(6) DEFAULT NULL,
                              `distance` double NOT NULL,
                              `input_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
                              `input_latitude` double NOT NULL,
